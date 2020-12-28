@@ -3,29 +3,38 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Contact;
+use App\Models\Country;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public function __construct()
     {
-        //
+        // $this->middleware('auth')->only([
+        //     'show', 'update', 'destroy'
+        // ]);
+
+        // $this->middleware('guest')->only([
+        //     'store', 'login'
+        // ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function login(Request $request, $msg = 'Welcome Again')
     {
-        //
+        $request->validate([
+            'email' => 'required|email|unique:contacts',
+            'password' => 'required|min:4',
+        ]);
+
+        $contact = Contact::where('email', $request->email)->with('user')->first();
+        if ($contact && Hash::check($request->password, $contact->user->password)) {
+            Auth::login($contact->user);
+        } else {
+            return response('Invalid Credentials', 401);
+        }
     }
 
     /**
@@ -36,33 +45,40 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->validate([
-            'fname' => 'required|max:100',
-            'lname' => 'required|max:100',
-            'dob' => 'required|date',
-            'email' => 'required|email|unique:users',
-            'phone' => 'required|max:9|min:9',
-            'password' => 'required|min:4',
-            'password_confirm' => 'required|same:password',
-            'country' => 'required|max:100',
-            'callingCode' => 'required|digits_between:1,3',
-        ]);
-
         if (filter_var($request->termsChecked, FILTER_VALIDATE_BOOL)) {
-            User::create($data);
 
-            /*
-            if (Auth::check()) {
-                return 'logged In';
-            }
-            return 'Not Looged In';
-            */
-            if (Auth::attempt($request->only('email', 'password'))) {
-                // $request->session()->regenerate();
-                return 'Logged In';
-            }
+            $request->validate([
+                # user
+                'fname' => 'required|max:100',
+                'lname' => 'required|max:100',
+                'dob' => 'required|date',
+                'password' => 'required|min:4',
+                'password_confirm' => 'required|same:password',
+
+                # contact
+                'address' => 'required|string|max:255',
+                'email' => 'required|email|unique:contacts',
+                'phone' => 'required|max:10|min:9',
+
+                # country
+                'country_id' => 'required|max:100',
+            ]);
+
+            $user = Country::find($request->country_id)->users()->create(
+                array_merge(
+                    $request->only(['fname', 'lname', 'dob']),
+                    ['password' => Hash::make($request->password)]
+                )
+            );
+
+            $user->contacts()->create($request->only([
+                'email', 'address', 'phone'
+            ]));
+
+            Auth::login($user);
         } else {
             return response('Terms & condition should be checked', 401);
+            die();
         }
     }
 
@@ -77,16 +93,6 @@ class UserController extends Controller
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
@@ -95,9 +101,30 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        $user = Auth::user();
+
+        $request->validate([
+            'fname' => 'required|max:100',
+            'lname' => 'required|max:100',
+            'dob' => 'required|date',
+            'password' => 'required|min:4',
+            'new_password' => 'required|min:4',
+            'password_confirm' => 'required|same:new_password',
+        ]);
+
+
+        if (Hash::check($request->password, $user->password)) {
+            $user->update(
+                array_merge(
+                    $request->only(['fname', 'lname', 'dob']),
+                    ['password' => Hash::make($request->new_password)]
+                )
+            );
+        } else {
+            return response('Incorrect Password', 401);
+        }
     }
 
     /**
@@ -106,8 +133,9 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy()
     {
-        //
+        $user = Auth::user();
+        $user->delete();
     }
 }

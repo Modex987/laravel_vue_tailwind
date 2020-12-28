@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,5 +15,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/{path}', function () {
-    return view('interface');
+    if (Auth::check()) {
+        return view('app');
+    } else {
+        return view('interface');
+    }
 })->where('path', '.*');

@@ -1,8 +1,8 @@
-import { onMounted } from "vue"
+import { onMounted, ref } from "vue"
 
 const Mixin = {
     methods: {
-        alrt(msg){
+        alrt(msg = 'Some Thing Went Wrong'){
             this.alert.visible = true
             this.alert.msg = msg
             this.timeOut = setTimeout(()=>{
@@ -18,7 +18,11 @@ const Mixin = {
                 msg: null
             },
 
-            timeOut: null
+            timeOut: null,
+
+            setup(){
+
+            }
         }
     },
 }

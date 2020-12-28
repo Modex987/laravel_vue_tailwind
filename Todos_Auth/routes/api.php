@@ -1,7 +1,10 @@
 <?php
 
+
+use App\Models\Country;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TodoController;
 use App\Http\Controllers\UserController;
 
 /*
@@ -21,3 +24,10 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 
 Route::resource('users', UserController::class);
+Route::post('users/login', [UserController::class, 'login']);
+
+Route::resource('todos', TodoController::class);
+
+Route::get('countries', function () {
+    return Country::all();
+});
