@@ -22,10 +22,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-
-Route::resource('users', UserController::class);
-Route::post('users/login', [UserController::class, 'login']);
-
 Route::resource('todos', TodoController::class);
 
 Route::get('countries', function () {

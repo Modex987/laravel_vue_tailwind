@@ -27,3 +27,8 @@ if (mix.inProduction()) {
   mix
     .version();
 }
+
+
+
+
+

@@ -42,9 +42,7 @@ class ContactPolicy
      */
     public function create(User $user)
     {
-        return optional($user)->contacts->count() < 2
-            ? Response::allow()
-            : Response::deny('You already have 2 contacts.');
+        return $user->contacts->count() === 0;
     }
 
     /**
@@ -68,9 +66,7 @@ class ContactPolicy
      */
     public function delete(User $user, Contact $contact)
     {
-        return ($user->contacts->count() === 2 && $user->id === $contact->user_id)
-            ? Response::allow()
-            : Response::deny('You can\'t have 0 contacts.');
+        return $user->id === $contact->user_id;
     }
 
     /**
@@ -82,7 +78,7 @@ class ContactPolicy
      */
     public function restore(User $user, Contact $contact)
     {
-        return $user->id === $contact->user_id && $user->contacts->count() < 2;
+        return $user->id === $contact->user_id && $user->contacts->count() === 0;
     }
 
     /**

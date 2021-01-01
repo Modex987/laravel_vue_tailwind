@@ -20,9 +20,7 @@ const Mixin = {
 
             timeOut: null,
 
-            setup(){
-
-            }
+            csrf: document.querySelector('meta[name=csrf-token]').getAttribute('content')
         }
     },
 }

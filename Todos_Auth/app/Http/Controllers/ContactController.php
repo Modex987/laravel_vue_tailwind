@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Contact;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -21,7 +22,7 @@ class ContactController extends Controller
      */
     public function index()
     {
-        return Auth::user()->contacts;
+        return Auth::user()->contact;
     }
 
 
@@ -31,11 +32,13 @@ class ContactController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, User $user)
     {
         $this->authorize('create', Contact::class);
 
-        Auth::user()->contacts()->create($this->validateRequest($request));
+        // Auth::user()->contact()->create($this->validateRequest($request));
+
+        $user->contact()->create(self::validateRequest($request));
     }
 
 
@@ -66,11 +69,14 @@ class ContactController extends Controller
         $contact->delete();
     }
 
-    private function validateRequest($request)
+    public static function validateRequest($request)
     {
         return $request->validate([
-            'address' => 'required|string|max:255',
-            'email' => 'required|email|unique:contacts',
+            'country_id' => 'required',
+            'fname' => 'required|string|max:100',
+            'lname' => 'required|string|max:100',
+            'address' => 'required|string|max:255|unique:contacts,address',
+            'dob' => 'required|date',
             'phone' => 'required|max:10|min:9',
         ]);
     }

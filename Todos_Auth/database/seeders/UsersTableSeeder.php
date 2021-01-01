@@ -17,15 +17,14 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        Country::limit(7)->get()->each(function ($country) {
-            Todo::factory()->count(3)->for(
-                User::factory()->for($country)->create()
-            )->create();
-        });
 
+        Country::limit(5)->get()->each(function ($country) {
 
-        User::limit(7)->get()->each(function ($user) {
-            Contact::factory()->count(2)->for($user)->create();
+            $user = User::factory()->create();
+
+            Todo::factory()->count(3)->for($user)->create();
+
+            Contact::factory()->for($user)->for($country)->create();
         });
     }
 }

@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\User;
+use App\Models\Contact;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Country extends Model
 {
@@ -39,8 +41,13 @@ class Country extends Model
     }
 
 
+    public function contacts()
+    {
+        return $this->hasMany(Contact::class);
+    }
+
     public function users()
     {
-        return $this->hasMany(User::class);
+        return $this->hasManyThrough(User::class, Contact::class);
     }
 }

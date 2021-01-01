@@ -17,8 +17,9 @@
     <link href="css/app.css" rel="stylesheet">
 </head>
 
-<body class="bg-gray-200">
-    <div id="app"></div>
+<body class="bg-gray-200 min-h-screen">
+    <div id="app">
+    </div>
     <script src="js/main.js"></script>
 </body>
 

@@ -19,10 +19,12 @@ class CountriesTableSeeder extends Seeder
         $countries = collect(json_decode($countries));
 
         $countries->each(function ($country) {
+
             $name = $country->name;
             $countryCode = $country->alpha3Code;
             $callingCode1 = $country->callingCodes[0];
             $callingCode2 = array_key_exists(1, $country->callingCodes) ? $country->callingCodes[1] : null;
+
             Country::create(compact('name', 'callingCode1', 'callingCode2', 'countryCode'));
         });
     }

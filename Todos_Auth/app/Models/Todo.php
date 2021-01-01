@@ -26,6 +26,7 @@ class Todo extends Model
      */
     protected $casts = [
         'status' => 'boolean',
+        'date_limit' => 'date',
     ];
 
     public function getStatusAttribute($status)

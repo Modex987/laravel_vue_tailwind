@@ -19,14 +19,8 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'dob',
-        'fname',
-        'lname',
         'email',
-        'phone',
         'password',
-        'country',
-        'callingCode',
     ];
 
     /**
@@ -46,7 +40,6 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'dob' => 'date',
     ];
 
 
@@ -55,13 +48,8 @@ class User extends Authenticatable
         return $this->hasMany(Todo::class);
     }
 
-    public function contacts()
+    public function contact()
     {
-        return $this->hasMany(Contact::class);
-    }
-
-    public function country()
-    {
-        return $this->belongsTo(Country::class);
+        return $this->hasOne(Contact::class);
     }
 }
