@@ -18,7 +18,7 @@
 </head>
 
 <body class="bg-gray-200 min-h-screen">
-    <div id="app">
+    <div id="app" class="bg-blue-400 min-h-screen">
     </div>
     <script src="js/main.js"></script>
 </body>

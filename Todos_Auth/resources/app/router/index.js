@@ -1,13 +1,32 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-// import Home from '../views/Home.vue'
+import Todos from '../views/Todos.vue'
+import Profile from '../views/Profile.vue'
+import NotFound from '../views/NotFound.vue'
 
 const routes = [
-    // {
-    //     name: 'Home',
-    //     component: Home,
-    //     path: '/'
-    // },
+    {
+        name: 'Todos',
+        component: Todos,
+        path: '/'
+    },
+
+    {
+        name: 'Profile',
+        component: Profile,
+        path: '/profile'
+    },
+
+    {
+        name: 'NotFound',
+        component: NotFound,
+        path: '/404'
+    },
+
+    {
+        path: '/.*',
+        redirect: '/404'
+    }
 ]
 
 

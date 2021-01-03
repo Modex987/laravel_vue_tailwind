@@ -1,8 +1,8 @@
 <template>
     <div class="sm:flex">
         <Nav />
-        <div class="p-4">
-            <h1>Hello from vue</h1>
+        <div class="">
+            <router-view />
         </div>
     </div>
 </template>
@@ -13,7 +13,11 @@ import { useStore } from 'vuex'
 
 export default {
     components: {
-        Nav
+        Nav,
+    },
+
+    methods: {
+        
     },
 
     data(){
@@ -26,4 +30,9 @@ export default {
 </script>
 
 <style>
+#app{
+    max-width: 100vw;
+    overflow: hidden;
+}
+
 </style>

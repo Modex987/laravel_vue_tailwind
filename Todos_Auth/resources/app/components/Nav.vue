@@ -1,28 +1,41 @@
 <template>
-    <button @click="toggleNav" ref="draggableContainer" @mousedown="dragMouseDown" class="m-2 absolute bg-green-600 p-3 border-none rounded focus:outline-none flex items-center justify-between">
-        <span class="bg-white rounded">&nbsp;</span>
-        <span class="bg-white mx-2 rounded">&nbsp;</span>
-        <span class="bg-white rounded">&nbsp;</span>
+    <button @click="toggleNav" ref="draggableContainer" @mousedown="dragMouseDown" class="m-2 absolute p-2 bg-green-600 border-none rounded focus:outline-none flex items-center justify-between">
+        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
     </button>
 
     <transition name="slide-fade">
-        <header v-if="navIsOpened" class="bg-blue-600 p-4 sm:text-center flex items-center justify-between sm:block sm:min-h-screen">
-            <h1 class="sm:px-4 font-black text-4xl sm:mb-8">todos</h1>
+        <header v-if="navIsOpened" class="bg-blue-600 p-4 sm:text-center flex items-start justify-between sm:block sm:min-h-screen">
+            <h1 class="sm:px-4 text-white font-black text-4xl sm:mb-8">todos</h1>
             <ul>
-                <li>Profile</li>
-                <li>Log Out</li>
+                <li class="mb-3 text-blue-900 hover:text-black hover:underline">
+                    <router-link :to="{name: 'Todos'}">todos list</router-link>
+                </li>                
+                <li class="mb-3 text-blue-900 hover:text-black hover:underline">
+                    <router-link :to="{name: 'Profile'}">profile</router-link>
+                </li>                
+                <li class="mb-3 text-blue-900 hover:text-black hover:underline">
+                    <form action="/logout" method="POST">
+                        <input type="hidden" name="_token" v-bind:value="csrf">
+                        <input type="submit" value="log out" class="bg-transparent cursor-pointer">
+                    </form>
+                </li>
             </ul>
         </header>
     </transition>
 </template>
 
-<script>
-import { ref } from 'vue'
 
+
+<script>
+
+import { ref } from 'vue'
 import { useStore } from 'vuex'
+import Mixin from '../mixins'
 
 export default {
     name: 'Nav',
+
+    mixins: [Mixin],
 
     computed: {
         
@@ -98,6 +111,11 @@ export default {
 
 <style scoped>
 
+button{
+    z-index: 100000001;
+    right: 0;
+}
+
 /* .slide-fade-enter-active {
   transition: all 0.3s ease-out;
 }
@@ -115,34 +133,34 @@ export default {
 @media (min-width: 640px) {
 
     .slide-fade-enter-active {
-    transition: all 0.3s ease-out;
+    transition: all 0.7s ease-out;
     }
 
     .slide-fade-leave-active {
-    transition: all 0.5s cubic-bezier(1, 0.5, 0.8, 1);
+    transition: all 0.7s cubic-bezier(1, 0.5, 0.8, 1);
     }
 
     .slide-fade-enter-from,
     .slide-fade-leave-to {
-    transform: translateX(-20px);
-    opacity: 0;
+    transform: translateX(-120px);
+    /* opacity: 0; */
     }
 }
 
 @media (max-width: 640px) {
 
     .slide-fade-enter-active {
-    transition: all 0.3s ease-out;
+    transition: all 0.7s ease-out;
     }
 
     .slide-fade-leave-active {
-    transition: all 0.5s cubic-bezier(1, 0.5, 0.8, 1);
+    transition: all 0.7s cubic-bezier(1, 0.5, 0.8, 1);
     }
 
     .slide-fade-enter-from,
     .slide-fade-leave-to {
-    transform: translateY(-20px);
-    opacity: 0;
+    transform: translateY(-120px);
+    /* opacity: 0; */
     }
 }
 </style>
