@@ -22,7 +22,7 @@ class ContactController extends Controller
      */
     public function index()
     {
-        return Auth::user()->contact;
+        return Auth::user()->contact()->with('country')->first();
     }
 
 
@@ -52,15 +52,19 @@ class ContactController extends Controller
     public function update(Request $request, Contact $contact)
     {
         $this->authorize('update', $contact);
+        // dump($contact);
+        // dd($request->all());
 
         $contact->update($this->validateRequest($request));
+
+        return $this->index();
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\Contact  $contact
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\ResponsevalidateRequest
      */
     public function destroy(Contact $contact)
     {
@@ -75,7 +79,8 @@ class ContactController extends Controller
             'country_id' => 'required',
             'fname' => 'required|string|max:100',
             'lname' => 'required|string|max:100',
-            'address' => 'required|string|max:255|unique:contacts,address',
+            // 'address' => 'required|string|max:255|unique:contacts,address',
+            'address' => 'required|string|max:255',
             'dob' => 'required|date',
             'phone' => 'required|max:10|min:9',
         ]);

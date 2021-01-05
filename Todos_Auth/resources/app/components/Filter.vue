@@ -12,7 +12,11 @@
     </div>
 </template>
 
+
+
 <script>
+import { useStore } from 'vuex'
+
 export default {
     name: 'Filter',
 
@@ -23,7 +27,9 @@ export default {
                 clientY: undefined,
                 movementX: 0,
                 movementY: 0
-            }
+            },
+
+            store: useStore()
         }
     },
 
@@ -55,12 +61,12 @@ export default {
 
         // ********************************
 
-        toggleSelectedClass: (e) => {
+        toggleSelectedClass: function (e) {
             document.querySelectorAll('div#filter > button').forEach(btn => {
                 btn.classList.remove('selected')
             });
             e.target.classList.add('selected')
-            
+            this.store.commit('fetchTodos', e.target.innerText.toLowerCase())
         }
     }
 

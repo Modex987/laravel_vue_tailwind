@@ -16,17 +16,17 @@ class UserAdded
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $contact_data;
-    public $user_id;
+    public $user;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(array $contact_data, $user_id)
+    public function __construct(array $contact_data, $user)
     {
         $this->contact_data = $contact_data;
-        $this->user_id = $user_id;
+        $this->user = $user;
     }
 
     /**

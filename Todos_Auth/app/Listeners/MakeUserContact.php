@@ -28,6 +28,7 @@ class MakeUserContact implements ShouldQueue
      */
     public function handle(UserAdded $event)
     {
-        User::where('id', $event->user_id)->first()->contact()->create($event->contact_data);
+        $event->user->contact()->create($event->contact_data);
+        // User::where('id', $event->user_id)->first()->contact()->create($event->contact_data);
     }
 }

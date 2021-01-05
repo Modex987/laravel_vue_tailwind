@@ -21,8 +21,9 @@ class CreateTodosTable extends Migration
                 ->onDelete('cascade');
             $table->string('title', 100);
             $table->string('body', 500);
-            $table->date('date_limit');
+            $table->date('date_limit')->nullable();
             $table->boolean('status')->default(false);
+            $table->softDeletes('deleted_at');
             $table->timestamps();
         });
     }

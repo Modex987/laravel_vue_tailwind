@@ -18,9 +18,22 @@ class TodoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Auth::user()->todos;
+        $type = $request->input('type');
+        if ($type === 'all') {
+
+            return Auth::user()->todos;
+        } elseif ($type === 'actif') {
+
+            return Auth::user()->todos()->actif()->get();
+        } elseif ($type === 'completed') {
+
+            return Auth::user()->todos()->completed()->get();
+        } elseif ($type === 'deleted') {
+
+            return Auth::user()->todos()->onlyTrashed()->get();
+        }
     }
 
     /**
@@ -32,8 +45,9 @@ class TodoController extends Controller
     public function store(Request $request)
     {
         $this->authorize('create', Todo::class);
+        // dd($request->all());
 
-        Auth::user()->todos()->create($this->validateTodo($request));
+        return Auth::user()->todos()->create($this->validateTodo($request));
     }
 
     /**
@@ -56,9 +70,16 @@ class TodoController extends Controller
      */
     public function update(Request $request, Todo $todo)
     {
-        $this->authorize('update', Todo::class);
+        $this->authorize('update', $todo);
 
-        $todo->update(($this->validateTodo($request)));
+        if ($request->input('status') === 'true') {
+            $todo->status = !$todo->status;
+            $todo->save();
+        } else {
+            $todo->update(($this->validateTodo($request)));
+        }
+
+        return $todo;
     }
 
     /**
@@ -79,7 +100,8 @@ class TodoController extends Controller
         return $request->validate([
             'title' => 'required|string|max:100',
             'body' => 'required|string|max:500',
-            'status' => 'sometimes|required|boolean'
+            'status' => 'sometimes|required|boolean',
+            'date_limit' => 'sometimes|required|date'
         ]);
     }
 }

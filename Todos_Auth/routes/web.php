@@ -1,9 +1,12 @@
 <?php
 
-use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Auth\RegisterController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TodoController;
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +28,22 @@ Route::post('/logout', [LoginController::class, 'logout']);
 
 Route::post('/register', [RegisterController::class, 'register']);
 
+
+Route::resource('todos', TodoController::class);
+Route::patch('todos/status/{todo}', [TodoController::class, 'updateStatus']);
+
+Route::resource('contacts', ContactController::class);
+
+Route::get('/me', function () {
+    return Auth::user();
+})->middleware('auth');
+
+Route::post('/mail', function (Request $request) {
+
+    Auth::user()->update($request->validate([
+        'email' => 'required|email'
+    ]));
+})->middleware('auth');
 
 Route::get('/{path}', function () {
     if (Auth::check()) {

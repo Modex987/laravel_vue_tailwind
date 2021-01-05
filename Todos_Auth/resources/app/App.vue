@@ -1,7 +1,7 @@
 <template>
     <div class="sm:flex">
         <Nav />
-        <div class="">
+        <div>
             <router-view />
         </div>
     </div>
@@ -25,6 +25,11 @@ export default {
             store: useStore()
         }
     },
+
+    mounted(){
+        this.store.commit('fetchContact')
+        this.store.commit('fetchUser')
+    }
 
 }
 </script>
